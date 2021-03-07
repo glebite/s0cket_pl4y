@@ -9,19 +9,26 @@ threading, timers, connections, reconnections and state management.
 """
 
 import sys
-import getopt
+import logging
+import logging.config
+from optparse import OptionParser
+
+logging.config.fileConfig('logging.conf')
+logger = logging.getLogger('fileHandler')
 
 
 class Client:
     """
     """
     def __init__(self, hostip, port):
+        logging.info(f'Instantiation {self} hostip: {hostip} port: {port}')
         self.hostip = hostip
         self.port = port
 
     def run(self):
         """
         """
+        logging.info('Running')
         pass
 
 
@@ -44,19 +51,20 @@ def main(arguments):
     :param:  arguments: command line arguments from sys.argv
     :return: None
     """
-    options, _ = getopt.getopt(arguments,
-                               'hs:p:', ['server=', 'port='])
-    for opt, arg in options:
-        if opt in ('-s', '--server'):
-            server = arg
-        elif opt in ('-p', '--port'):
-            port = int(arg)
-        elif opt in ('-h'):
-            usage()
-        else:
-            usage()
-    client = Client(server, port)
+    logging.info(f'Executing main: {arguments}')
+    parser = OptionParser()
+    parser.add_option('-s', '--server', dest='server',
+                      default=False,
+                      help='server IP address')
+    parser.add_option('-p', '--port', dest='port',
+                      default=False,
+                      help='server port')
+
+    (options, args) = parser.parse_args(arguments)
+    logging.info(f'Opt: {options} args: {args}')
+    client = Client(options.server, int(options.port))
     client.run()
+    logging.info('Completed execution')
     return None
 
 
