@@ -22,6 +22,7 @@ logger = logging.getLogger('fileHandler')
 
 
 class Error(Exception):
+    """ """
     pass
 
 
@@ -32,16 +33,21 @@ class ThreadedServer(object):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.sock.bind((self.host, self.port))
+        self.counter = 0
+        self.clients = []
 
     def listen(self):
         self.sock.listen(5)
         while True:
+            logging.debug(f'Incoming connect counter: {self.counter}')
             client, address = self.sock.accept()
             client.settimeout(60)
             threading.Thread(target=self.listenToClient,
                              args=(client, address)).start()
+            self.counter += 1
 
     def listenToClient(self, client, address):
+        logging.info(f'Thread counter: {self.counter}')
         size = 1024
         while True:
             try:
@@ -51,7 +57,8 @@ class ThreadedServer(object):
                     response = data
                     client.send(response)
                 else:
-                    raise Error
+                    logging.error('In the else case - nothing received?')
+                    raise Exception
             except Exception as e:
                 logging.error(f'Problem while listening to the client: {e}')
                 client.close()

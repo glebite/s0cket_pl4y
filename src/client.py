@@ -12,7 +12,8 @@ import sys
 import logging
 import logging.config
 from optparse import OptionParser
-import socket 
+import socket
+import time
 
 logging.config.fileConfig('logging.conf')
 logger = logging.getLogger('fileHandler')
@@ -32,7 +33,8 @@ class Client:
         logging.info('Running')
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((self.hostip, self.port))
-        pass
+        time.sleep(30)
+        socket.close
 
 
 def usage():
