@@ -31,7 +31,7 @@ class Client:
         """
         logging.info('Running')
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect(self.hostip, self.port)
+            s.connect((self.hostip, self.port))
         pass
 
 
