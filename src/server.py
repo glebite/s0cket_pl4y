@@ -11,6 +11,12 @@ threading, timers, connections, reconnections and state management.
 """
 
 import sys
+import logging
+import logging.config
+from optparse import OptionParser
+
+logging.config.fileConfig('logging.conf')
+logger = logging.getLogger('fileHandler')
 
 
 def main(arguments):
@@ -19,7 +25,12 @@ def main(arguments):
     :param arguments: command line arguments from sys.argv
     :return: None
     """
-
+    parser = OptionParser()
+    parser.add_option('-p', '--port', dest='port',
+                      default=False,
+                      help='server port')
+    (options, args) = parser.parse_args(arguments)
+    logging.info(f'Port: {int(options.port)}')
     return None
 
 
