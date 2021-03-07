@@ -14,6 +14,7 @@ import sys
 import logging
 import logging.config
 from optparse import OptionParser
+import socket
 
 logging.config.fileConfig('logging.conf')
 logger = logging.getLogger('fileHandler')
@@ -31,6 +32,10 @@ def main(arguments):
                       help='server port')
     (options, args) = parser.parse_args(arguments)
     logging.info(f'Port: {int(options.port)}')
+
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind((socket.gethostname(), 80))
+    server_socket.listen(5)
     return None
 
 
