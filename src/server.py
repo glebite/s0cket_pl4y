@@ -34,7 +34,7 @@ def main(arguments):
     logging.info(f'Port: {int(options.port)}')
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind((socket.gethostname(), 80))
+    server_socket.bind((socket.gethostname(), 5150))
     server_socket.listen(5)
     return None
 
