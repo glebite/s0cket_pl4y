@@ -21,6 +21,10 @@ logging.config.fileConfig('logging.conf')
 logger = logging.getLogger('fileHandler')
 
 
+class Error(Exception):
+    pass
+
+
 class ThreadedServer(object):
     def __init__(self, host, port):
         self.host = host
@@ -47,7 +51,7 @@ class ThreadedServer(object):
                     response = data
                     client.send(response)
                 else:
-                    raise
+                    raise Error
             except Exception as e:
                 logging.error(f'Problem while listening to the client: {e}')
                 client.close()
