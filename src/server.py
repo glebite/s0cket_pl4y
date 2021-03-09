@@ -16,8 +16,11 @@ import logging.config
 from optparse import OptionParser
 import socket
 import threading
+from os import path
 
-logging.config.fileConfig('logging.conf')
+log_file_path = path.join(path.dirname(path.abspath("__file__")),
+                          'logging.conf')
+logging.config.fileConfig(log_file_path)
 logger = logging.getLogger('fileHandler')
 
 
@@ -82,5 +85,5 @@ def main(arguments):
     return None
 
 
-if __name__ == "__main__":
+if (__name__ == "__main__"):
     main(sys.argv)
