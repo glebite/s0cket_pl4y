@@ -18,17 +18,25 @@ class Proxy(object):
         :param:  arguments - argument dictionary for configuration
         :return: None
         """
+        pass
+
 
 def main(arguments):
     logging.info(f'Executing main: {arguments}')
     parser = OptionParser()
     parser.add_option('-r', '--remote', dest='remote',
                       default=False,
-                      help='remote erver IP address')
+                      help='remote server IP address')
     parser.add_option('-p', '--port', dest='port',
                       default=False,
                       help='remote server port')
-
+    parser.add_option('-c', '--client', dest='client',
+                      default=False,
+                      help='client server IP address')
+    parser.add_option('-P', '--Port', dest='client_port',
+                      default=False,
+                      help='client server port')
+    
     (options, args) = parser.parse_args(arguments)
     logging.info(f'Opt: {options} args: {args}')    
 
