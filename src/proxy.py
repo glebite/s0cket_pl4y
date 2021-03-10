@@ -11,6 +11,14 @@ logging.config.fileConfig('logging.conf')
 logger = logging.getLogger('fileHandler')
 
 
+class Proxy(object):
+    def __init__(self, arguments):
+        """__init__
+
+        :param:  arguments - argument dictionary for configuration
+        :return: None
+        """
+
 def main(arguments):
     logging.info(f'Executing main: {arguments}')
     parser = OptionParser()
