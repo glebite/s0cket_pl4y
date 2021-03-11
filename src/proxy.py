@@ -20,6 +20,9 @@ class Proxy(object):
         """
         pass
 
+    def proxy_handler(self):
+        pass
+    
 
 def main(arguments):
     logging.info(f'Executing main: {arguments}')
