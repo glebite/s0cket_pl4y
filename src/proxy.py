@@ -20,6 +20,22 @@ class Proxy(object):
         """
         pass
 
+    def loop(self):
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        try:
+            self.server.socket.bind((self.localhost, self.localport))
+        except:
+            sys.exit(0)
+
+        while True:
+            try:
+                self.client_socket, self.addr = self.server_socket.accept()
+            except:
+                pass
+            self.proxy_thread = threading.Thread(target=self.proxy_handler)
+            self.proxy_thread.start()
+
     def proxy_handler(self):
         pass
     
