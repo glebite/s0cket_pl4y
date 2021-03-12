@@ -44,16 +44,25 @@ class Proxy(object):
             self.proxy_thread.start()
 
     def proxy_handler(self):
-        pass
+        self.remote_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.remote_socket.connect((self.remote_ip, self.remote_port))
+
+        while True:
+            local_buffer = self.receive_from(self.client_socket)
+            if len(local_buffer) > 0:
+                self.remote_socket.send(local_buffer)
+            remote_buffer = self.receive_from(self.remote_socket)
+            if len(remote_buffer) > 0:
+                self.client_socket.send(remote_buffer)
 
 
 def main(arguments):
     logging.info(f'Executing main: {arguments}')
     parser = OptionParser()
-    parser.add_option('-r', '--remote', dest='remote',
+    parser.add_option('-r', '--remote', dest='remote_ip',
                       default=False,
                       help='remote server IP address')
-    parser.add_option('-p', '--port', dest='port',
+    parser.add_option('-p', '--port', dest='remote_port',
                       default=False,
                       help='remote server port')
     parser.add_option('-c', '--client', dest='client',
