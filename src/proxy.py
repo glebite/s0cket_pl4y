@@ -1,5 +1,7 @@
-"""
-"""
+#!/usr/bin/env python
+#
+# proxy.py
+#
 import sys
 import logging
 import logging.config
@@ -26,7 +28,7 @@ class Proxy(object):
         logging.debug(f'Arguments: {arguments}')
         self.local_host = arguments.local_host
         self.localport = int(arguments.local_port)
-        self.remote_ip = arguments.remote_ip
+        self.remote_ip = arguments.remote_host
         self.remote_port = int(arguments.remote_port)
 
     def loop(self):
@@ -35,7 +37,7 @@ class Proxy(object):
         :param:  None
         :return: None
         """
-        logging.info(f'Coming into loop.')
+        logging.info('Coming into loop.')
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         try:
@@ -73,7 +75,7 @@ class Proxy(object):
         :param:  None
         :return: None
         """
-        logging.info(f'Coming into proxy_handler.')
+        logging.info('Coming into proxy_handler.')
         self.remote_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.remote_socket.connect((self.remote_host, self.remote_port))
 
@@ -112,7 +114,7 @@ def main(arguments):
                       default=False,
                       help='local server port')
     (options, args) = parser.parse_args(arguments)
-    logging.debugf'Opt: {options} args: {args}')
+    logging.debug(f'Opt: {options} args: {args}')
     proxy = Proxy(options)
     proxy.run()
 
