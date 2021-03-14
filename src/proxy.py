@@ -23,16 +23,11 @@ class Proxy(object):
         self.buffer_size = 1024
 
         # tease data members from arguments
-        self.localhost = arguments['local']
-        self.localport = arguments['local_port']
-        self.remote_ip = arguments['remote']
-        self.remote_port = arguments['remote_port']
-        
-        try:
-            self.run()
-        except Exception as e:
-            logging.error(f'Caught exception {e}')
-            sys.exit(0)
+        logging.debug(f'Arguments: {arguments}')
+        self.localhost = arguments.local
+        self.localport = int(arguments.local_port)
+        self.remote_ip = arguments.remote_ip
+        self.remote_port = int(arguments.remote_port)
 
     def loop(self):
         """loop
@@ -43,7 +38,7 @@ class Proxy(object):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         try:
-            self.server.socket.bind((self.localhost, self.localport))
+            self.server_socket.bind((self.localhost, self.localport))
         except Exception as e:
             logging.error(f'Loop socket bind: {e}')
             sys.exit(0)
@@ -89,7 +84,7 @@ class Proxy(object):
     def run(self):
         """run
         """
-        pass
+        self.loop()
 
 
 def main(arguments):
@@ -114,6 +109,8 @@ def main(arguments):
                       help='local server port')
     (options, args) = parser.parse_args(arguments)
     logging.info(f'Opt: {options} args: {args}')
+    proxy = Proxy(options)
+    proxy.run()
 
 
 if __name__ == "__main__":
