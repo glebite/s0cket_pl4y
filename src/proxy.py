@@ -21,6 +21,11 @@ class Proxy(object):
         """
         self.timeout = 2
         self.buffer_size = 1024
+        try:
+            self.run()
+        except Exception as e:
+            logging.error(f'Caught exception {e}')
+            sys.exit(0)
 
     def loop(self):
         """loop
@@ -74,6 +79,11 @@ class Proxy(object):
             if len(remote_buffer) > 0:
                 self.client_socket.send(remote_buffer)
 
+    def run(self):
+        """run
+        """
+        pass
+
 
 def main(arguments):
     """main
@@ -88,13 +98,13 @@ def main(arguments):
                       help='remote server IP address')
     parser.add_option('-p', '--port', dest='remote_port',
                       default=False,
-                      help='remote server port')
-    parser.add_option('-c', '--client', dest='client',
+                      help='local server port')
+    parser.add_option('-c', '--local', dest='local',
                       default=False,
-                      help='client server IP address')
-    parser.add_option('-P', '--Port', dest='client_port',
+                      help='local server IP address')
+    parser.add_option('-P', '--Port', dest='local_port',
                       default=False,
-                      help='client server port')
+                      help='local server port')
     (options, args) = parser.parse_args(arguments)
     logging.info(f'Opt: {options} args: {args}')
 
