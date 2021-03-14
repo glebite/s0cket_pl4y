@@ -24,7 +24,7 @@ class Proxy(object):
 
         # tease data members from arguments
         logging.debug(f'Arguments: {arguments}')
-        self.localhost = arguments.local
+        self.local_host = arguments.local_host
         self.localport = int(arguments.local_port)
         self.remote_ip = arguments.remote_ip
         self.remote_port = int(arguments.remote_port)
@@ -35,10 +35,11 @@ class Proxy(object):
         :param:  None
         :return: None
         """
+        logging.info(f'Coming into loop.')
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         try:
-            self.server_socket.bind((self.localhost, self.localport))
+            self.server_socket.bind((self.local_host, self.local_port))
         except Exception as e:
             logging.error(f'Loop socket bind: {e}')
             sys.exit(0)
@@ -52,6 +53,8 @@ class Proxy(object):
             self.proxy_thread.start()
 
     def receive_from(self, socket):
+        """receive_from
+        """
         try:
             socket.settimeout(self.timeout)
             data_buffer = b""
@@ -61,7 +64,7 @@ class Proxy(object):
                     break
                 data_buffer += data
         except Exception as e:
-            print(f"[!] Socket Error {e}")
+            logging.error(f"[!] Socket Error {e}")
             pass
         return data_buffer
 
@@ -70,8 +73,9 @@ class Proxy(object):
         :param:  None
         :return: None
         """
+        logging.info(f'Coming into proxy_handler.')
         self.remote_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.remote_socket.connect((self.remote_ip, self.remote_port))
+        self.remote_socket.connect((self.remote_host, self.remote_port))
 
         while True:
             local_buffer = self.receive_from(self.client_socket)
@@ -95,20 +99,20 @@ def main(arguments):
     """
     logging.info(f'Executing main: {arguments}')
     parser = OptionParser()
-    parser.add_option('-r', '--remote', dest='remote_ip',
+    parser.add_option('-r', '--remote', dest='remote_host',
                       default=False,
                       help='remote server IP address')
     parser.add_option('-p', '--port', dest='remote_port',
                       default=False,
                       help='local server port')
-    parser.add_option('-c', '--local', dest='local',
+    parser.add_option('-c', '--local', dest='local_host',
                       default=False,
                       help='local server IP address')
     parser.add_option('-P', '--Port', dest='local_port',
                       default=False,
                       help='local server port')
     (options, args) = parser.parse_args(arguments)
-    logging.info(f'Opt: {options} args: {args}')
+    logging.debugf'Opt: {options} args: {args}')
     proxy = Proxy(options)
     proxy.run()
 
