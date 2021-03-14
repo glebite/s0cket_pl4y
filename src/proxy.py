@@ -43,7 +43,25 @@ class Proxy(object):
             self.proxy_thread = threading.Thread(target=self.proxy_handler)
             self.proxy_thread.start()
 
+    def receive_from(socket):
+        try:
+            socket.settimeout(2)
+            data_buffer = b""
+            while True:
+                data = socket.recv(1024)
+                if not data:
+                    break
+                data_buffer += data
+        except Exception as e:
+            print(f"[!] Socket Error {e}")
+            pass
+        return data_buffer
+
     def proxy_handler(self):
+        """proxy_handler
+        :param:  None
+        :return: None
+        """
         self.remote_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.remote_socket.connect((self.remote_ip, self.remote_port))
 
@@ -57,6 +75,11 @@ class Proxy(object):
 
 
 def main(arguments):
+    """main
+
+    :param:  arguments
+    :return: None
+    """
     logging.info(f'Executing main: {arguments}')
     parser = OptionParser()
     parser.add_option('-r', '--remote', dest='remote_ip',
