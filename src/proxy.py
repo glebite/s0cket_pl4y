@@ -23,12 +23,13 @@ class Proxy(object):
         """
         self.timeout = 2
         self.buffer_size = 1024
+        self.pending_connections = 1
 
         # tease data members from arguments
         logging.debug(f'Arguments: {arguments}')
         self.local_host = arguments.local_host
-        self.localport = int(arguments.local_port)
-        self.remote_ip = arguments.remote_host
+        self.local_port = int(arguments.local_port)
+        self.remote_host = arguments.remote_host
         self.remote_port = int(arguments.remote_port)
 
     def loop(self):
@@ -42,6 +43,7 @@ class Proxy(object):
 
         try:
             self.server_socket.bind((self.local_host, self.local_port))
+            self.server_socket.listen(self.pending_connections)
         except Exception as e:
             logging.error(f'Loop socket bind: {e}')
             sys.exit(0)
