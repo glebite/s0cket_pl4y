@@ -19,7 +19,8 @@ class Proxy(object):
         :param:  arguments - argument dictionary for configuration
         :return: None
         """
-        pass
+        self.timeout = 2
+        self.buffer_size = 1024
 
     def loop(self):
         """loop
@@ -43,12 +44,12 @@ class Proxy(object):
             self.proxy_thread = threading.Thread(target=self.proxy_handler)
             self.proxy_thread.start()
 
-    def receive_from(socket):
+    def receive_from(self, socket):
         try:
-            socket.settimeout(2)
+            socket.settimeout(self.timeout)
             data_buffer = b""
             while True:
-                data = socket.recv(1024)
+                data = socket.recv(self.buffer_size)
                 if not data:
                     break
                 data_buffer += data
