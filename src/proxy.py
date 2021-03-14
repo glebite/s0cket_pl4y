@@ -21,6 +21,13 @@ class Proxy(object):
         """
         self.timeout = 2
         self.buffer_size = 1024
+
+        # tease data members from arguments
+        self.localhost = arguments['local']
+        self.localport = arguments['local_port']
+        self.remote_ip = arguments['remote']
+        self.remote_port = arguments['remote_port']
+        
         try:
             self.run()
         except Exception as e:
