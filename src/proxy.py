@@ -1,13 +1,13 @@
 #!/usr/bin/env python
-#
-# proxy.py
-#
+"""
+proxy.py
+"""
 import sys
 import logging
 import logging.config
-from optparse import OptionParser
 import socket
 import threading
+from optparse import OptionParser
 
 
 logging.config.fileConfig('logging.conf')
@@ -21,7 +21,7 @@ class Proxy(object):
         :param:  arguments - argument dictionary for configuration
         :return: None
         """
-        self.timeout = 2
+        self.socket_timeout = 2
         self.buffer_size = 1024
         self.pending_connections = 1
 
@@ -60,7 +60,7 @@ class Proxy(object):
         """receive_from
         """
         try:
-            socket.settimeout(self.timeout)
+            socket.settimeout(self.socket_timeout)
             data_buffer = b""
             while True:
                 data = socket.recv(self.buffer_size)
@@ -68,7 +68,7 @@ class Proxy(object):
                     break
                 data_buffer += data
         except Exception as e:
-            logging.error(f"[!] Socket Error {e}")
+            # logging.error(f"[!] Socket Error {e}")
             pass
         return data_buffer
 
