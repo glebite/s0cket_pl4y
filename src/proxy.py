@@ -21,7 +21,7 @@ class Proxy(object):
         :param:  arguments - argument dictionary for configuration
         :return: None
         """
-        self.socket_timeout = 2
+        self.socket_timeout = 0.01
         self.buffer_size = 1024
         self.pending_connections = 1
 
@@ -38,8 +38,17 @@ class Proxy(object):
         :param:  None
         :return: None
         """
-        logging.info('Coming into loop.')
+        logging.info(f'Socket instantiation loop: '
+                     f'local_host: {self.local_host}'
+                     f'local_port: {self.local_port}'
+                     f'pending_connections: {self.pending_connections}'
+                     f'proxy_handler = {self.proxy_handler}')
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        logging.debug(f'Socket creation: {self.server_socket}')
+
+        # This allows for reuse of the port connection
+        self.server_socket.setsockopt(socket.SOL_SOCKET,
+                                      socket.SO_REUSEADDR, 1)
 
         try:
             self.server_socket.bind((self.local_host, self.local_port))
@@ -63,7 +72,6 @@ class Proxy(object):
         :return:  data_buffer - binary string containing
                                 data read from the socket.
         """
-        logging.debug(f'Receiving data from socket {socket}')
         socket.settimeout(self.socket_timeout)
         try:
             data_buffer = b""
@@ -73,8 +81,8 @@ class Proxy(object):
                     break
                 logging.debug(f'Received data: {received_data}')
                 data_buffer += received_data
-        except Exception as e:
-            logging.error(f"[!] Socket Error {e}")
+        except Exception:
+            # logging.error(f"[!] Socket Error {e}")
             pass
         return data_buffer
 
