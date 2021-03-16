@@ -18,19 +18,27 @@ class Proxy(object):
     def __init__(self, arguments):
         """__init__
 
-        :param:  arguments - argument dictionary for configuration
+        :param:  arguments - argument object for configuration
+                             .local_host = the host of the proxy 
+                             .local_port = the port to access the proxy 
+                              (needs to be converted to an int)
+                             .remote_host = the destination host to use 
+                             .remote_port = the destination port to use
+                              (needs to be converted to an int)
         :return: None
         """
-        self.socket_timeout = 0.01
-        self.buffer_size = 1024
-        self.pending_connections = 1
-
         # tease data members from arguments
         logging.debug(f'Arguments: {arguments}')
         self.local_host = arguments.local_host
         self.local_port = int(arguments.local_port)
         self.remote_host = arguments.remote_host
         self.remote_port = int(arguments.remote_port)
+        
+        self.socket_timeout = 0.01
+        self.buffer_size = 1024
+        self.pending_connections = 1
+
+
 
     def loop(self):
         """loop
