@@ -58,17 +58,23 @@ class Proxy(object):
 
     def receive_from(self, socket):
         """receive_from
+
+        :param:   socket - socket used for receiving data
+        :return:  data_buffer - binary string containing
+                                data read from the socket.
         """
+        logging.debug(f'Receiving data from socket {socket}')
+        socket.settimeout(self.socket_timeout)
         try:
-            socket.settimeout(self.socket_timeout)
             data_buffer = b""
             while True:
-                data = socket.recv(self.buffer_size)
-                if not data:
+                received_data = socket.recv(self.buffer_size)
+                if not received_data:
                     break
-                data_buffer += data
+                logging.debug(f'Received data: {received_data}')
+                data_buffer += received_data
         except Exception as e:
-            # logging.error(f"[!] Socket Error {e}")
+            logging.error(f"[!] Socket Error {e}")
             pass
         return data_buffer
 
