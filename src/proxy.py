@@ -1,6 +1,24 @@
 #!/usr/bin/env python
 """
 proxy.py
+
+-r/--remote <remote server ip address>
+-p/--port   <remote server port>
+-c/--local  <local server>
+-P/--Port   <local server port>
+
+            client
+            |    ^
+            |    |
+            |    |
+            v    |
+            Proxy  (local_host, local_port)
+            |    ^
+            |    |
+            |    |
+            v    |
+            remote (remote_host, remote_port)
+
 """
 import sys
 import logging
@@ -19,10 +37,10 @@ class Proxy(object):
         """__init__
 
         :param:  arguments - argument object for configuration
-                             .local_host = the host of the proxy 
-                             .local_port = the port to access the proxy 
+                             .local_host = the host of the proxy
+                             .local_port = the port to access the proxy
                               (needs to be converted to an int)
-                             .remote_host = the destination host to use 
+                             .remote_host = the destination host to use
                              .remote_port = the destination port to use
                               (needs to be converted to an int)
         :return: None
@@ -33,12 +51,10 @@ class Proxy(object):
         self.local_port = int(arguments.local_port)
         self.remote_host = arguments.remote_host
         self.remote_port = int(arguments.remote_port)
-        
+
         self.socket_timeout = 0.01
         self.buffer_size = 1024
         self.pending_connections = 1
-
-
 
     def loop(self):
         """loop
@@ -111,16 +127,11 @@ class Proxy(object):
             if len(remote_buffer) > 0:
                 self.client_socket.send(remote_buffer)
 
-    def run(self):
-        """run
-        """
-        self.loop()
-
 
 def main(arguments):
     """main
 
-    :param:  arguments
+    :param:  arguments - array instance of sys.argv
     :return: None
     """
     logging.info(f'Executing main: {arguments}')
@@ -130,7 +141,7 @@ def main(arguments):
                       help='remote server IP address')
     parser.add_option('-p', '--port', dest='remote_port',
                       default=False,
-                      help='local server port')
+                      help='remote server port')
     parser.add_option('-c', '--local', dest='local_host',
                       default=False,
                       help='local server IP address')
@@ -140,7 +151,7 @@ def main(arguments):
     (options, args) = parser.parse_args(arguments)
     logging.debug(f'Opt: {options} args: {args}')
     proxy = Proxy(options)
-    proxy.run()
+    proxy.loop()
 
 
 if __name__ == "__main__":
