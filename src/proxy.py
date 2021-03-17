@@ -2,6 +2,9 @@
 """
 proxy.py
 
+If running as a tool:
+$ proxy.py -r/--remote -p/port -c/--local -P/--Port
+
 -r/--remote <remote server ip address>
 -p/--port   <remote server port>
 -c/--local  <local server>
@@ -52,12 +55,16 @@ class Proxy(object):
         self.remote_host = arguments.remote_host
         self.remote_port = int(arguments.remote_port)
 
+        # local configurable parameters
         self.socket_timeout = 0.01
         self.buffer_size = 1024
         self.pending_connections = 1
 
     def loop(self):
-        """loop
+        """loop - the running loop to build and bind the socket..
+
+        :note:   uses configurable parameters: self.pending_connections,
+                 self.proxy_handler
 
         :param:  None
         :return: None
@@ -67,6 +74,7 @@ class Proxy(object):
                      f'local_port: {self.local_port}'
                      f'pending_connections: {self.pending_connections}'
                      f'proxy_handler = {self.proxy_handler}')
+
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         logging.debug(f'Socket creation: {self.server_socket}')
 
@@ -90,7 +98,11 @@ class Proxy(object):
             self.proxy_thread.start()
 
     def receive_from(self, socket):
-        """receive_from
+        """receive_from - collect data from a socket.
+
+        :note:    self.socket_timeout, self.buffer_size
+                  are configurable parameters that can
+                  be played with to improve performance.
 
         :param:   socket - socket used for receiving data
         :return:  data_buffer - binary string containing
