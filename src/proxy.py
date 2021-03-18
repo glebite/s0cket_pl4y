@@ -26,6 +26,7 @@ $ proxy.py -r/--remote -p/port -c/--local -P/--Port
 import sys
 import logging
 import logging.config
+import select
 import socket
 import threading
 from optparse import OptionParser
@@ -59,6 +60,9 @@ class Proxy(object):
         self.socket_timeout = 0.01
         self.buffer_size = 1024
         self.pending_connections = 1
+
+        # stats
+        self.thread_counter = 0
 
     def loop(self):
         """loop - the running loop to build and bind the socket..
@@ -124,14 +128,31 @@ class Proxy(object):
 
     def proxy_handler(self):
         """proxy_handler
+
         :param:  None
         :return: None
         """
-        logging.info('Coming into proxy_handler.')
+        logging.info(f'Coming into proxy_handler with thread #'
+                     f' {self.thread_counter}')
         self.remote_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.remote_socket.connect((self.remote_host, self.remote_port))
 
+        self.thread_counter += 1
+
         while True:
+            try:
+                ready_to_read, ready_to_write, in_error = \
+                    select.select([self.client_socket, ],
+                                  [self.remote_socket, ],
+                                  [], 5)
+                logging.debug(f'Status: {ready_to_read} {ready_to_write}'
+                              f'{in_error}')
+
+            except select.error:
+                self.client_socket.shutdown(2)
+                self.client_socket.close
+                logging.error('Connection error')
+
             local_buffer = self.receive_from(self.client_socket)
             if len(local_buffer) > 0:
                 self.remote_socket.send(local_buffer)
