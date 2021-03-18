@@ -3,11 +3,11 @@
 proxy.py
 
 If running as a tool:
-$ proxy.py -r/--remote -p/port -c/--local -P/--Port
+$ proxy.py -r/--remote -p/port -l/--local -P/--Port
 
 -r/--remote <remote server ip address>
 -p/--port   <remote server port>
--c/--local  <local server>
+-l/--local  <local server>
 -P/--Port   <local server port>
 
             client
@@ -175,7 +175,7 @@ def main(arguments):
     parser.add_option('-p', '--port', dest='remote_port',
                       default=False,
                       help='remote server port')
-    parser.add_option('-c', '--local', dest='local_host',
+    parser.add_option('-l', '--local', dest='local_host',
                       default=False,
                       help='local server IP address')
     parser.add_option('-P', '--Port', dest='local_port',
