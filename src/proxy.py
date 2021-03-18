@@ -31,7 +31,7 @@ import socket
 import threading
 from optparse import OptionParser
 
-
+# TODO: move logging.conf to a parameter
 logging.config.fileConfig('logging.conf')
 logger = logging.getLogger('fileHandler')
 
