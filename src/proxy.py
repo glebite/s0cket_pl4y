@@ -136,7 +136,6 @@ class Proxy(object):
                      f' {self.thread_counter}')
         self.remote_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.remote_socket.connect((self.remote_host, self.remote_port))
-
         self.thread_counter += 1
 
         while True:
@@ -151,7 +150,7 @@ class Proxy(object):
             except select.error:
                 self.client_socket.shutdown(2)
                 self.client_socket.close
-                logging.error('Connection error')
+                logging.error(f'Connection error {select.error}')
 
             local_buffer = self.receive_from(self.client_socket)
             if len(local_buffer) > 0:
