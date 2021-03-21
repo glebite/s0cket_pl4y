@@ -63,6 +63,8 @@ class Proxy(object):
 
         # stats
         self.thread_counter = 0
+        self.local_to_remote = 0
+        self.remote_to_local = 0
 
     def loop(self):
         """loop - the running loop to build and bind the socket..
@@ -154,9 +156,11 @@ class Proxy(object):
 
             local_buffer = self.receive_from(self.client_socket)
             if len(local_buffer) > 0:
+                self.local_to_remote += 1
                 self.remote_socket.send(local_buffer)
             remote_buffer = self.receive_from(self.remote_socket)
             if len(remote_buffer) > 0:
+                self.remote_to_local += 1
                 self.client_socket.send(remote_buffer)
 
 
