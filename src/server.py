@@ -31,6 +31,12 @@ class Error(Exception):
 
 class ThreadedServer(object):
     def __init__(self, host, port):
+        """__init__ - initialization method for ThreadedServer
+
+        :param:  host - host location of this server
+        :param:  port - port of the server
+        :return: None
+        """
         self.host = host
         self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -40,6 +46,8 @@ class ThreadedServer(object):
         self.clients = []
 
     def listen(self):
+        """listen - listening to incoming connection
+        """
         self.sock.listen(5)
         while True:
             logging.debug(f'Incoming connect counter: {self.counter}')
@@ -49,7 +57,13 @@ class ThreadedServer(object):
                              args=(client, address)).start()
             self.counter += 1
 
-    def listenToClient(self, client, address):
+    def listen_to_client(self, client, address):
+        """listen_to_client - data retrieval magic
+
+        :param:  client - 
+        :param:  address -
+        :return: False in an error
+        """
         logging.info(f'Thread counter: {self.counter}')
         size = 1024
         while True:
