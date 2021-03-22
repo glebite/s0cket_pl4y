@@ -23,12 +23,19 @@ class Client:
     """
     """
     def __init__(self, hostip, port):
+        """__init__ - init for the class
+
+        :param:  hostip - host ip address to talk to
+        :param:  port - port to send to
+
+        :return: None
+        """
         logging.info(f'Instantiation {self} hostip: {hostip} port: {port}')
         self.hostip = hostip
         self.port = port
 
     def run(self):
-        """
+        """run - basic run system
         """
         logging.info('Running')
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
