@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """
@@ -60,7 +61,7 @@ class ThreadedServer(object):
     def listen_to_client(self, client, address):
         """listen_to_client - data retrieval magic
 
-        :param:  client - 
+        :param:  client -
         :param:  address -
         :return: False in an error
         """
