@@ -25,11 +25,6 @@ logging.config.fileConfig(log_file_path)
 logger = logging.getLogger('fileHandler')
 
 
-class Error(Exception):
-    """ """
-    pass
-
-
 class ThreadedServer(object):
     def __init__(self, host, port):
         """__init__ - initialization method for ThreadedServer
